@@ -15,11 +15,11 @@ const FILES_TO_CACHE = [
   "./dist/schedule.bundle.js"
 ];
 
-self.addEventListener('fetch', function(e) {
+self.addEventListener('fetch', function (e) {
   console.log('fetch request : ' + e.request.url)
   e.respondWith(
-    caches.match(e.request).then(function(request) {
-      if(request) {
+    caches.match(e.request).then(function (request) {
+      if (request) {
         console.log('responding with cache : ' + e.request.url)
         return request
       } else {
@@ -39,7 +39,7 @@ self.addEventListener('install', function (e) {
   )
 });
 
-self.addEventListener('activate', function (e) {
+self.addEventListener('activate', function(e) {
   e.waitUntil(
     caches.keys().then(function(keyList) {
       let cacheKeeplist = keyList.filter(function(key) {
@@ -48,11 +48,12 @@ self.addEventListener('activate', function (e) {
       cacheKeeplist.push(CACHE_NAME);
 
       return Promise.all(keyList.map(function(key, i) {
-        if (cacheKeeplist.indexOf(key) === -1) {
-          console.log('deleting cache : ' + keyList[i]);
-          return caches.delete(keyList[i]);
-        }
-      }));
+          if (cacheKeeplist.indexOf(key) === -1) {
+            console.log('deleting cache : ' + keyList[i]);
+            return caches.delete(keyList[i]);
+          }
+        })
+      );
     })
-  )
-})
+  );
+});
